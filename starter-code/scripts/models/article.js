@@ -53,16 +53,16 @@
         /* TODO:
            1 - Use Article.loadAll to instanitate these rows,
            2 - invoke the function that was passed in to fetchAll */
-          Article.loadAll();
-          articleView.renderIndexPage();
+          Article.loadAll(rows);
+          nextFunction();
         } else {
           $.getJSON('/data/hackerIpsum.json', function(responseData) {
             responseData.forEach(function(obj) {
               var article = new Article(obj); // This will instantiate an article instance based on each article object from our JSON.
-              /* TODO:
+              /* TODONE:
                1 - 'insert' the newly-instantiated article in the DB:
              */
-              Article.insertRecord();
+              article.insertRecord();
             });
             webDB.execute(
               'SELECT * FROM articles', // <-----TODONE: query our table for articles once more
@@ -71,7 +71,7 @@
                 // 1 - Use Article.loadAll to process our rows,
                 // 2 - invoke the function that was passed in to fetchAll
                 Article.loadAll(rows);
-                articleView.RenderIndexPage();
+                nextFunction();
               });
           });
         }
@@ -85,7 +85,7 @@
         {
           /* NOTE: this is an advanced admin option, so you will need to test
               out an individual query in the console */
-          'sql': '', // <---TODO: Delete an article instance from the database based on its id:
+          'sql': 'DELETE FROM articles WHERE id = ?;', // <---TODO: Delete an article instance from the database based on its id:
           'data': [this.id]
         }
       ]
@@ -94,7 +94,7 @@
 
   Article.clearTable = function() {
     webDB.execute(
-      'DELETE ...;' // <----TODO: delete all records from the articles table.
+      'DELETE FROM articles;' // <----TODO: delete all records from the articles table.
     );
   };
 
@@ -136,7 +136,7 @@
     });
   };
 
-// TODO: ensure that our table has been created.
-
+// TODONE: ensure that our table has been created.
+  Article.createTable();
   module.Article = Article;
 })(window);
